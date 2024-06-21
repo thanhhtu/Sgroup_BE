@@ -1,68 +1,54 @@
 import UserService from './user.service';
 
 class UserController {
-    getAll(req, res, next) {
-        const users = UserService.getUsers();
-        return res.send(users);
+    async getAll(req, res, next) {
+        const users = await UserService.selectAll();
+        return res.json(users);
     }
     
-    getDetail(req, res, next){
-        const users = UserService.getUsers();
-        const index = users.findIndex(user => user.id === parseInt(req.params.id));
+    async getDetail(req, res, next){
+        const user = await UserService.selectDetail(parseInt(req.params.id));
+        if(!user){
+            return res.send("User does not exist");
+        }
+        return res.json(user);
         
-        if(index == -1){
-            res.send("The id does not exist!");
-            return;
-        }
-
-        const detailUser = users.find(user => user.id === parseInt(req.params.id));
-        return res.send(detailUser);        
     }
 
-    postUser(req, res, next){
-        const users = UserService.getUsers();
-        const newUser = req.body;
-
-        if(users.find(user => user.id === newUser.id)){
-            res.send("The id of req already exists!");
-            return;
+    async postUser(req, res, next){
+        const newUser = {
+            Email: req.body.Email,
+            Pwd: req.body.Pwd,
+            Gender: req.body.Gender,
+            Age: req.body.Age
         }
 
-        users.push(newUser);
-        UserService.setUsers(users);     
-
-        return res.send(users);
+        const id = await UserService.insertUser(newUser);
+        return res.json(await UserService.selectDetail(id));
     }
 
-    putUser(req, res, next){
-        const users = UserService.getUsers();
-    
-        const index = users.findIndex(user => user.id === parseInt(req.params.id))
-        if(index == -1){
-            res.send("The id does not exist!");
-            return;
+    async putUser(req, res, next){
+        const newUser = {
+            Email: req.body.Email,
+            Pwd: req.body.Pwd,
+            Gender: req.body.Gender,
+            Age: req.body.Age
         }
-    
-        const newUser = req.body;
-        users[index] = newUser;
-        UserService.setUsers(users);     
-
-        return res.send(users);
+        const id = parseInt(req.params.id)
+        const num = await UserService.updateUser(id, newUser);
+        if(num == 0){
+            return res.send("User does not exist");
+        }
+        return res.json(await UserService.selectDetail(id));
     }
 
-    delUser(req, res, next){ 
-        const users = UserService.getUsers();
-    
-        const index = users.findIndex(user => user.id === parseInt(req.params.id))
-        if(index == -1){
-            res.send("The id does not exist!");
-            return;
+    async delUser(req, res, next){ 
+        const id = parseInt(req.params.id)
+        const num = await UserService.delUser(id);
+        if(num == 0){
+            return res.send("User does not exist");
         }
-    
-        users.splice(index, 1); 
-        UserService.setUsers(users);     
-
-        return res.send(users);
+        return res.json(await UserService.selectAll());
     }
 }
 
