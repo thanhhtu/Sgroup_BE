@@ -8,6 +8,7 @@ const pool = mysql.createPool({
 	port: 3306
 });
 
+<<<<<<< HEAD
 pool.getConnection(function (err, conn) {
 	if(err){
 		console.error('error');
@@ -16,4 +17,6 @@ pool.getConnection(function (err, conn) {
 	}
 }); 
 
+=======
+>>>>>>> ba34e9e9e1ef82e4717e1c67dff307b529ee1943
 export default pool;
