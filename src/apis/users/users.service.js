@@ -1,4 +1,5 @@
-import usersModel from "../../models/users.model";
+import usersModel from '../../models/users.model';
+
 class UsersService{
     async getUsers(){
         try {
