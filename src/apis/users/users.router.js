@@ -1,5 +1,6 @@
 import express from 'express';
 import usersController from './users.controller';
+import verifyMiddleware from '../../middleware/verify.middleware';
 
 const route = express.Router();
 

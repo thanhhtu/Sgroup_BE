@@ -47,8 +47,8 @@ class UsersController {
             });
         }catch(error){
             return res.status(500).json({
-                success: false,
-                message: "Internal Server Error"
+                    success: false,
+                    message: "Internal Server Error"
             });
         }
     }
