@@ -5,14 +5,14 @@ import hashService from '../../service/hash.service';
 class AuthService{
     async register(registerInfo){
         try {
-            const user = await usersModel.getUserByEmail(registerInfo.email);
+            const user = await usersModel.getUserByEmail(registerInfo.Email);
             if(user != null){
                 return false;
             }
             
-            const hashObj = await hashService.hashPassword(registerInfo.password);
-            registerInfo.password = hashObj.hashedPassword;
-            await usersModel.createUserSalt(registerInfo, hashObj.salt);
+            const hashObj = await hashService.hashPassword(registerInfo.Pwd);
+            registerInfo.Pwd = hashObj.hashedPassword;
+            await usersModel.createUser(registerInfo);
             return true;
         }catch(error){
             throw new Error('Internal Service Error');
