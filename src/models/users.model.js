@@ -78,19 +78,6 @@ class UsersModel {
             throw error;
         }
     }
-
-    async createUserSalt(user, salt){ //thêm salt để hash password
-        try{
-            const connection = await pool.getConnection();
-            const query = `INSERT INTO users (Email, Pwd, Gender, Age, Salt) VALUES (?, ?, ?, ?, ?);`; 
-            const {email, password, gender, age} = user;
-            const value = [email, password, gender, age, salt];
-            await connection.query(query, value);
-            return true;
-        }catch(error){
-            throw error;
-        }
-    }
 }
 
 export default new UsersModel();
