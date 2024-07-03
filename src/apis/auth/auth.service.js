@@ -11,9 +11,7 @@ class AuthService{
             }
             
             const hashObj = await hashService.hashPassword(registerInfo.password);
-            
             registerInfo.password = hashObj.hashedPassword;
-            
             await usersModel.createUserSalt(registerInfo, hashObj.salt);
             return true;
         }catch(error){
@@ -21,34 +19,12 @@ class AuthService{
         }
     }
 
-    // async login(loginInfo){
-    //     try {
-    //         const user = await usersModel.getUserByEmail(loginInfo.email);
-
-    //         if(user == null){
-    //             return new Error('User not found');
-    //         }
-
-    //         if(user.Pwd != loginInfo.password){
-    //             throw new Error('Wrong password');
-    //         }  
-
-    //         const token = await userIdentityService.encodeToken(user);
-    //         return token;
-    //     }catch(error){
-    //         // throw error;
-    //         throw new Error('Internal Service Error');
-    //     }
-    // }
-
     async login(loginInfo){
         try {
             const user = await usersModel.getUserByEmail(loginInfo.email);
-
             if(user == null){
                 return false;
             }
-            
             const check = await hashService.checkPassword(loginInfo.password, user.Pwd);
             if(!check){
                 return false;

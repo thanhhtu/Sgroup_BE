@@ -9,14 +9,14 @@ class UserIdentityService {
 
     async encodeToken(user) {
         return jwt.sign(
-        { 
-            id: user.UserID
-        }, 
-        this.JWT_SECRET, 
-        {
-            expiresIn: this.JWT_EXPIRES_IN,
-            algorithm: 'HS256',
-        }
+            { 
+                id: user.UserID
+            }, 
+            this.JWT_SECRET, 
+            {
+                expiresIn: this.JWT_EXPIRES_IN,
+                algorithm: 'HS256',
+            }
         )
     }
 
