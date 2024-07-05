@@ -65,6 +65,56 @@ class AuthController {
             });
         }
     }
+
+    async forgotPassword(req, res, next){
+        try {
+            const {email} = req.body;
+
+            const check = await authService.forgotPassword(email);
+            console.log(check);
+            if(check){
+                return res.status(200).json({
+                    success: true,
+                    message: 'Reset password email sent successfully'
+                });
+            }
+
+            return res.status(400).json({
+                success: false,
+                message: "Email not found"
+            });
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    async resetPassword(req, res, next){
+        try {
+            const {email, passwordResetToken, newPassword} = req.body;
+
+            const check = await authService.resetPassword(email, passwordResetToken, newPassword);
+            console.log(check)
+            if(check){
+                return res.status(200).json({
+                    success: true,
+                    message: 'Reset password successfully'
+                });
+            }
+
+            return res.status(400).json({
+                success: false,
+                message: "Invalid token or token has expired"
+            });
+        } catch (error) {
+            return res.status(400).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 }
 
 export default new AuthController();
