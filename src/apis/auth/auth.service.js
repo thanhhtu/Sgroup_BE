@@ -42,23 +42,17 @@ class AuthService{
 
     async forgotPassword(email) {
         try {
-            const user = await usersModel.getUserByEmail(email)
+            const user = await usersModel.getUserByEmail(email);
 
-            if (user == null) {
+            if(user == null){
                 return false //user not exist
             }
 
             // const secretKey = crypto.randomBytes(32).toString('hex');
             // const passwordResetToken = crypto.createHash('sha256').update(secretKey).digest('hex');
-            const passwordResetToken = await bcrypt.genSalt(10)
-            const passwordResetExpiration = new Date(
-                Date.now() + 10 * 60 * 1000
-            ) //10 minutes from the time sending req
-            const updateStatus = await usersModel.setPasswordToken(
-                passwordResetToken,
-                passwordResetExpiration,
-                email
-            )
+            const passwordResetToken = await bcrypt.genSalt(10);
+            const passwordResetExpiration = new Date(Date.now() + 10 * 60 * 1000); //10 minutes from the time sending req
+            const updateStatus = await usersModel.setPasswordToken(passwordResetToken, passwordResetExpiration, email);
 
             if (updateStatus) {
                 mailService.sendEmail({
@@ -68,13 +62,13 @@ class AuthService{
                     emailText:
                         'Here is your reset password token: ' +
                         passwordResetToken,
-                })
-                return true
+                });
+                return true;
             }
 
-            throw new Error('Can not reset password')
-        } catch (error) {
-            throw error
+            throw new Error('Can not reset password');
+        }catch(error){
+            throw error;
         }
     }
 
