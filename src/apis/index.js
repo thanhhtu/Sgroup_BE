@@ -1,10 +1,12 @@
 import express from 'express';
-import userRoute from './users/users.router';
+import usersRoute from './users/users.router';
 import authRoute from './auth/auth.router';
+import filesRoute from './upload/upload.router';
 
 const router = express.Router();
 
-router.use('/users', userRoute);
+router.use('/users', usersRoute);
 router.use('/auth', authRoute);
+router.use('/upload', filesRoute);
 
 export default router;
