@@ -1,4 +1,5 @@
 import express from 'express';
+import 'dotenv/config';
 import routers from './apis';
 import errorHandler from './middleware/handleError.middleware';
 
@@ -10,7 +11,7 @@ app.use('/', routers);
 
 app.use(errorHandler);
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
