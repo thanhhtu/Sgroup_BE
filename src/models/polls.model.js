@@ -88,7 +88,10 @@ class PollsModel {
             const optRows = [];
             const rows = await this.getOptsByPollID(pollID);
             for(let row of rows){
-                optRows.push(row.OptionName);
+                optRows.push({
+                    OptionId: row.OptionID,
+                    OptionName: row.OptionName
+                });
             }
 
             const result = {
