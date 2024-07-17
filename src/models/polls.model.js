@@ -118,7 +118,7 @@ class PollsModel {
             })
 
             connection.release();
-            return true;
+            return result.insertId;
         }catch(error){
             throw error;
         }
