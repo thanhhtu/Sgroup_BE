@@ -227,9 +227,9 @@ class PollsModel {
     async insertVote(userID, optID){
         try{
             const connection = await pool.getConnection();
-            await connection.query('INSERT INTO votes (UserID, OptionID) VALUES (?, ?);', [userID, optID]);
+            const results = await connection.query('INSERT INTO votes (UserID, OptionID) VALUES (?, ?);', [userID, optID]);
             connection.release();
-            return true;
+            return results[0].insertId;
         }catch(error){
             throw error;
         }
@@ -238,9 +238,9 @@ class PollsModel {
     async deleteVote(userID, optID){
         try{
             const connection = await pool.getConnection();
-            await connection.query('DELETE FROM votes WHERE UserID = ? AND OptionID = ?', [userID, optID]);
+            const results = await connection.query('DELETE FROM votes WHERE UserID = ? AND OptionID = ?', [userID, optID]);
             connection.release();
-            return true;
+            return results[0].affectedRows;
         }catch(error){
             throw error;
         }
