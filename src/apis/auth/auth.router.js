@@ -4,7 +4,7 @@ import verifyMiddleware from '../../middleware/verify.middleware';
 
 const route = express.Router();
 
-route.get('/me', verifyMiddleware.checkAuth, authController.getMe);
+route.get('/me', verifyMiddleware.verifyAuth, authController.getMe);
 route.post('/register', authController.register);
 route.post('/login', authController.login);
 route.post('/forgot-password', authController.forgotPassword);
