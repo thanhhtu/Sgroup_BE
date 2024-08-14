@@ -3,7 +3,7 @@ name: Deployment to EC2
 on:
   push:
     branches:
-      - main #khi có sự thay đổi trong nhánh main mới chạy lại github action
+      - dev #khi có sự thay đổi trong nhánh dev mới chạy lại github action
 
 jobs:
   build:
