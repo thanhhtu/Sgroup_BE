@@ -1,0 +1,60 @@
+name: Deployment to EC2
+
+on:
+  push:
+    branches:
+      - main #khi có sự thay đổi trong nhánh main mới chạy lại github action
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Build Docker image
+        run: docker build -t sgroupbe-cicd .
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: us-east-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Push to ECR
+        run: |  
+          docker images
+          docker tag sgroupbe-cicd:latest ${{ secrets.ECR_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com/sgroupbe-cicd:latest
+          docker push ${{ secrets.ECR_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com/sgroupbe-cicd:latest
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: us-east-1
+
+      - name: SSH to EC2 and deploy
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.HOST_DNS }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY}}
+          script: |
+            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com
+            docker pull ${{ secrets.ECR_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com/sgroupbe-cicd:latest
+            docker stop sgroupbe-cicd-container || true 
+            docker rm sgroupbe-cicd-container || true
+            docker run -d --name sgroup-cicd-container -p 3000:3000 \ -e DB_HOST-${{ secrets.DB_HOST}} \ -e DB_PORT-${{ secrets.DB_PORT}} \	-e DB_USER-${{ secrets.DB_USER}} \ -e DB_PASSWORD-${{ secrets.DB_PASSWORD}} \ -e DB_NAME-${{ secrets.DB_NAME}} \ ${{ secrets.ECR_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com/sgroupbe-cicd:latest
+			
