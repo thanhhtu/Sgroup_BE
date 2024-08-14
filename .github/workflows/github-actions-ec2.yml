@@ -27,7 +27,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Push to ECR
-        run: |  
+        run: |
           docker images
           docker tag sgroupbe-cicd:latest ${{ secrets.ECR_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com/sgroupbe-cicd:latest
           docker push ${{ secrets.ECR_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com/sgroupbe-cicd:latest
