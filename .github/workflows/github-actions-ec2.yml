@@ -56,4 +56,10 @@ jobs:
             docker pull ${{ secrets.ECR_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com/sgroupbe-cicd:latest
             docker stop sgroupbe-cicd-container || true 
             docker rm sgroupbe-cicd-container || true
-            docker run -d --name sgroupbe-cicd-container -p 3000:3000 \ -e DB_HOST=${{ secrets.DB_HOST}} \ -e DB_PORT=${{ secrets.DB_PORT}} \	-e DB_USER=${{ secrets.DB_USER}} \ -e DB_PASSWORD=${{ secrets.DB_PASSWORD}} \ -e DB_NAME=${{ secrets.DB_NAME}} \ ${{ secrets.ECR_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com/sgroupbe-cicd:latest
+            docker run -d --name sgroupbe-cicd-container -p 3000:3000 \
+            -e DB_HOST=${{ secrets.DB_HOST}} \ 
+            -e DB_PORT=${{ secrets.DB_PORT}} \	
+            -e DB_USER=${{ secrets.DB_USER}} \ 
+            -e DB_PASSWORD=${{ secrets.DB_PASSWORD}} \ 
+            -e DB_NAME=${{ secrets.DB_NAME}} \ 
+            ${{ secrets.ECR_ACCOUNT_ID }}.dkr.ecr.ap-southeast-1.amazonaws.com/sgroupbe-cicd:latest
